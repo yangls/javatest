@@ -79,18 +79,21 @@ public class MultiplexerTimeServer implements Runnable {
                 //得到就绪的管道
                 ServerSocketChannel ssc = (ServerSocketChannel) key.channel();
                 //
-                SocketChannel sc = ssc.accept();
+                SocketChannel sc = ssc.accept();//完成三次握手
                 sc.configureBlocking(false);//非阻塞
-                sc.register(selector,SelectionKey.OP_READ);
+                sc.register(selector,SelectionKey.OP_READ);//建立了读取的物理链路
 
             }
             //能读数据
             if(key.isReadable()){//测试这个key对应的channel是否准备好读取
                 //获取管道
                 SocketChannel sc = (SocketChannel) key.channel();
+                //无法知道客户端会发多少k内容来，先开个1k
                 ByteBuffer readBuffer = ByteBuffer.allocate(1024);
 
+                //读取管道里的码流
                 int readBytes = sc.read(readBuffer);
+                //有数据
                 if(readBytes>0){
                     //buffer reset
                     readBuffer.flip();
@@ -98,8 +101,15 @@ public class MultiplexerTimeServer implements Runnable {
                     readBuffer.get(bytes);
                     String body = new String (bytes,"UTF-8");
                     System.out.println("the time server receive order:"+body);
+                    //如果请求的指令是。。。就返回当前时间
+                    //bussiness code
                     String currentTime = "QUERY TIME ORDER".equalsIgnoreCase(body)?new Date(System.currentTimeMillis()).toString():"BAD ORDER";
+                    //写入管道
                     doWrite(sc,currentTime);
+                }else if(readBytes<0){
+                    //链路已经关闭
+                    key.cancel();
+                    sc.close();
                 }
             }
 
