@@ -67,7 +67,7 @@ public class MultiplexerTimeServer implements Runnable {
                 }
             } catch (IOException e) {
                 e.printStackTrace();
-
+                System.exit(1);
             }
         }
     }
@@ -81,7 +81,7 @@ public class MultiplexerTimeServer implements Runnable {
                 //
                 SocketChannel sc = ssc.accept();//完成三次握手
                 sc.configureBlocking(false);//非阻塞
-                sc.register(selector,SelectionKey.OP_READ);//建立了读取的物理链路
+                sc.register(selector,SelectionKey.OP_READ);//建立了读取的物理链路（客户端要写了）
 
             }
             //能读数据
@@ -104,7 +104,7 @@ public class MultiplexerTimeServer implements Runnable {
                     //如果请求的指令是。。。就返回当前时间
                     //bussiness code
                     String currentTime = "QUERY TIME ORDER".equalsIgnoreCase(body)?new Date(System.currentTimeMillis()).toString():"BAD ORDER";
-                    //写入管道
+                    //写入管道,客户端将进行读取
                     doWrite(sc,currentTime);
                 }else if(readBytes<0){
                     //链路已经关闭
@@ -121,7 +121,7 @@ public class MultiplexerTimeServer implements Runnable {
             byte[] bytes = response.getBytes();//获取要写的内容
             ByteBuffer buffer  = ByteBuffer.allocate(bytes.length);//分配缓冲buffer大小
             buffer.put(bytes);
-            buffer.flip();
+            buffer.flip();//清空缓存
             sc.write(buffer);//管道写入
         }
     }
