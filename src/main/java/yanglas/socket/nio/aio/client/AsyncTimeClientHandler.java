@@ -77,7 +77,7 @@ public class AsyncTimeClientHandler  implements Runnable, CompletionHandler<Void
                             try {
                                 body = new String(bytes,"UTF-8");
                                 System.out.println("Now is:"+body);
-                                countDownLatch.countDown();
+                                countDownLatch.countDown();//代表序列完成，数目减去1，为0时会线程完成退出
                             } catch (UnsupportedEncodingException e) {
                                 e.printStackTrace();
                             }
