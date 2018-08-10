@@ -81,7 +81,7 @@ public class MultiplexerTimeServer implements Runnable {
                 //
                 SocketChannel sc = ssc.accept();//完成三次握手
                 sc.configureBlocking(false);//非阻塞
-                sc.register(selector,SelectionKey.OP_READ);//建立了读取的物理链路（客户端要写了）
+                sc.register(selector,SelectionKey.OP_READ);//建立了读取的物理链路（客户端要写了，监听到了可以read的事件）
 
             }
             //能读数据

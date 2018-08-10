@@ -80,7 +80,7 @@ public class TimeClientHandle implements Runnable {
             SocketChannel socketChannel = (SocketChannel) key.channel();
             if(key.isConnectable()){//可以连接 OP_CONNECT
                 if(socketChannel.finishConnect()){
-                    socketChannel.register(selector,SelectionKey.OP_READ);//链接上了，就注册到复用器 key.isReadable() == true
+                    socketChannel.register(selector,SelectionKey.OP_READ);//链接上了，就注册到复用器， key.isReadable() == true，表示写入完毕，可以读了
                     doWrite(socketChannel);//写相关信息
                 }else
                     System.exit(1);
