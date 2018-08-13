@@ -29,7 +29,9 @@ public class TimeServerHandlerSecondVersion extends ChannelHandlerAdapter {
         //写入req缓存
         buf.readBytes(req);
 
-        String body = new String (req,"UTF-8").substring(0,req.length -System.getProperty("line.separator").length());
+        //String body = new String (req,"UTF-8").substring(0,req.length -System.getProperty("line.separator").length());
+        //利用LineBasedFrameDecoder和StringDecoder后，编码不需要指定
+        String body = (String) msg;
 
         //每读到一条消息后，计一次数目，发送应答给客户端
         System.out.println("the time server receive order :"+body +

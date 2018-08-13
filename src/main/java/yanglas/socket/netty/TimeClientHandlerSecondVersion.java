@@ -30,8 +30,11 @@ public class TimeClientHandlerSecondVersion extends ChannelHandlerAdapter {
          ByteBuf buf = (ByteBuf) msg;
          byte[] req = new byte[buf.readableBytes()];
          buf.readBytes(req);
-         String body = new String(req,"UTF-8");
-         System.out.println("Now is:"+body +"; the counter is :"+ ++counter);
+//         String body = new String(req,"UTF-8");
+        //利用LineBasedFrameDecoder和StringDecoder 后无需编码
+        String body = (String) msg;
+
+        System.out.println("Now is:"+body +"; the counter is :"+ ++counter);
     }
 
     /**

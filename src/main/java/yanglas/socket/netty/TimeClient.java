@@ -8,6 +8,8 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.LineBasedFrameDecoder;
+import io.netty.handler.codec.string.StringDecoder;
 
 public class TimeClient {
 
@@ -28,6 +30,9 @@ public class TimeClient {
                     protected void initChannel(SocketChannel socketChannel) throws Exception {
                         //channelPipeline 放入业务处理类，处理io事件
                       //  socketChannel.pipeline().addLast(new TimeClientHandler());
+                        //利用LineBasedFrameDecoder和StringDecoder可以解决粘包问题。
+                        socketChannel.pipeline().addLast(new LineBasedFrameDecoder(1024));
+                        socketChannel.pipeline().addLast(new StringDecoder());
                         //这个版本，客户端只会收到2次返回，发生了粘包。客户端是发送了100次。
                         socketChannel.pipeline().addLast(new TimeClientHandlerSecondVersion());
                     }
