@@ -27,7 +27,9 @@ public class TimeClient {
                     @Override
                     protected void initChannel(SocketChannel socketChannel) throws Exception {
                         //channelPipeline 放入业务处理类，处理io事件
-                        socketChannel.pipeline().addLast(new TimeClientHandler());
+                      //  socketChannel.pipeline().addLast(new TimeClientHandler());
+                        //这个版本，客户端只会收到2次返回，发生了粘包。客户端是发送了100次。
+                        socketChannel.pipeline().addLast(new TimeClientHandlerSecondVersion());
                     }
                 });
             //异步连接

@@ -41,7 +41,9 @@ public class TimeServer {
     private class ChildChannelHandler extends ChannelInitializer<SocketChannel> {
         @Override
         protected void initChannel(SocketChannel socketChannel) throws Exception {
-            socketChannel.pipeline().addLast(new TimeServerHandler());
+         //   socketChannel.pipeline().addLast(new TimeServerHandler());
+            //粘包版本，只接收到2次
+            socketChannel.pipeline().addLast(new TimeServerHandlerSecondVersion());
         }
     }
 
