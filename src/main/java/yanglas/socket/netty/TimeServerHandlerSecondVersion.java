@@ -23,11 +23,11 @@ public class TimeServerHandlerSecondVersion extends ChannelHandlerAdapter {
      */
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        //类似ByteBuffer 功能丰富
+/*        //类似ByteBuffer 功能丰富
         ByteBuf buf = (ByteBuf) msg;
         byte[] req = new byte[buf.readableBytes()];
         //写入req缓存
-        buf.readBytes(req);
+        buf.readBytes(req);*/
 
         //String body = new String (req,"UTF-8").substring(0,req.length -System.getProperty("line.separator").length());
         //利用LineBasedFrameDecoder和StringDecoder后，编码不需要指定

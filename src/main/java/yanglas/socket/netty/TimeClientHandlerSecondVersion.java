@@ -14,7 +14,9 @@ public class TimeClientHandlerSecondVersion extends ChannelHandlerAdapter {
     private byte[] req;
 
     public TimeClientHandlerSecondVersion() {
+
         req = ("QUERY TIME ORDER"+System.getProperty("line.separator")).getBytes();
+        System.out.println("create query message："+req.toString());
        // firstMsg = Unpooled.buffer(req.length);
        // firstMsg.writeBytes(req);
     }
@@ -27,9 +29,9 @@ public class TimeClientHandlerSecondVersion extends ChannelHandlerAdapter {
      */
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-         ByteBuf buf = (ByteBuf) msg;
-         byte[] req = new byte[buf.readableBytes()];
-         buf.readBytes(req);
+//         ByteBuf buf = (ByteBuf) msg;
+//         byte[] req = new byte[buf.readableBytes()];
+//         buf.readBytes(req);
 //         String body = new String(req,"UTF-8");
         //利用LineBasedFrameDecoder和StringDecoder 后无需编码
         String body = (String) msg;
