@@ -1,6 +1,8 @@
 package yanglas.socket.netty.decode.client;
 
 import io.netty.bootstrap.Bootstrap;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -8,6 +10,7 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.DelimiterBasedFrameDecoder;
 import io.netty.handler.codec.LineBasedFrameDecoder;
 import io.netty.handler.codec.string.StringDecoder;
 
@@ -35,8 +38,11 @@ public class EchoClient {
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
                             //channelPipeline 放入业务处理类，处理io事件
                             //  socketChannel.pipeline().addLast(new TimeClientHandler());
-                            //利用LineBasedFrameDecoder和StringDecoder可以解决粘包问题。
-                            socketChannel.pipeline().addLast(new LineBasedFrameDecoder(1024));
+                            //设定分隔符
+                            ByteBuf delimiter = Unpooled.copiedBuffer("$_".getBytes());
+                            //配置解码器（单条最大长度，如果到1024都没有分隔符就抛出异常）
+                            socketChannel.pipeline().addLast(new DelimiterBasedFrameDecoder(1024,delimiter));
+                            //配置字符解码器
                             socketChannel.pipeline().addLast(new StringDecoder());
                             //这个版本，客户端只会收到2次返回，发生了粘包。客户端是发送了100次。
                             socketChannel.pipeline().addLast(new EchoClientHandler());
