@@ -15,13 +15,20 @@ public class EchoServerHandler extends ChannelHandlerAdapter {
 
     int counter = 0;
 
+    /**
+     * 读取管道信息
+     * @param ctx
+     * @param msg
+     * @throws Exception
+     */
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         //服务端的解码器会让msg会是完整的字符串数据包，直接强转
         String body = (String) msg;
-        System.out.println("this is "+counter+" times receive client:"+body);
+        System.out.println("this is "+ ++counter +" times receive client:"+body);
         body += "$_";//把过滤符加上，客户端也需要的分隔符号
         ByteBuf echo = Unpooled.copiedBuffer(body.getBytes());
+
         //通道回写进去
         ctx.writeAndFlush(echo);
     }
